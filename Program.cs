@@ -1,13 +1,15 @@
 ﻿using Refactor2.Domain.Enums;
 using Refactor2.Domain.Models;
 using Refactor2.Domain.Services;
+using Refactor2.Interfaces;
 
 internal class Program
 {
     static void Main(string[] args)
     {
         var validation = new SubcriptionValidation();
-        var calculation = new SubcriptionCalculation();
+        ISubscriptionCalculation calculation = new SubcriptionCalculation();
+        calculation = new CachingSuscriptionCalculation(calculation);
         var notification = new NotificationServices();
         var service = new SubscriptionService(validation,calculation, notification);
 
@@ -43,7 +45,6 @@ internal class Program
                 {
                     Subscription = sub,
                     EnableLogging = true,
-                    EnableCaching = true,
                     SendWelcomeEmail = true,
                     SimulateSlowDatabase = false
                 }

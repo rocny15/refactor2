@@ -11,7 +11,6 @@ namespace Refactor2.Domain.Services
         ISubscriptionCalculation subscriptionCalculation, 
         INotificationServices notificationServices)
     {
-        private static Dictionary<int, decimal> _cache = new Dictionary<int, decimal>();
         private readonly ISubscriptionValidation _subscriptionValidation = subscriptionValidation;
         private readonly ISubscriptionCalculation _subscriptionCalculation = subscriptionCalculation;
         private readonly INotificationServices _notificationServices = notificationServices; 
@@ -21,9 +20,9 @@ namespace Refactor2.Domain.Services
             var subscription = subscriptionDto.Subscription;
             var result = _subscriptionValidation.Validate(subscription);
 
-            if (!result.isValid)
+            if (!result.IsValid)
             {
-                Console.WriteLine(result.erroMessage);
+                Console.WriteLine(result.ErrorMessage);
                 return;
             }
 
@@ -34,28 +33,7 @@ namespace Refactor2.Domain.Services
                 sw = Stopwatch.StartNew();
             }
 
-            decimal finalPrice;
-
-            // CACHE
-            if (subscriptionDto.EnableCaching && _cache.ContainsKey(subscription.Id))
-            {
-                if (subscriptionDto.EnableLogging)
-                {
-                    Console.WriteLine($"[LOG] Found price in cache for subscription {subscription.Id}");
-                }
-
-                finalPrice = _cache[subscription.Id];
-            }
-            else
-            {
-                // PRICE CALCULATION
-                finalPrice = _subscriptionCalculation.CalculateFinalPrice(subscription);
-
-                if (subscriptionDto.EnableCaching)
-                {
-                    _cache[subscription.Id] = finalPrice;
-                }
-            }
+            var finalPrice = _subscriptionCalculation.CalculateFinalPrice(subscription);
 
             if (subscriptionDto.SimulateSlowDatabase)
             {

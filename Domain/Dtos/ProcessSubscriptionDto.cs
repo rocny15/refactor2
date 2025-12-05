@@ -9,7 +9,6 @@ namespace Refactor2.Domain.Dtos
     {
         public Subscription Subscription { get; set; }
         public bool EnableLogging { get; set; }
-        public bool EnableCaching { get; set; }
         public bool SendWelcomeEmail { get; set; }
         public bool SimulateSlowDatabase { get; set; }
     }

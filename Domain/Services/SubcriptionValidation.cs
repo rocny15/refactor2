@@ -1,22 +1,23 @@
 ﻿using Refactor2.Domain.Models;
+using Refactor2.Domain.Reponse;
 using Refactor2.Interfaces;
 
 namespace Refactor2.Domain.Services
 {
     public class SubcriptionValidation : ISubscriptionValidation
     {
-        public (bool isValid, string erroMessage) Validate(Subscription subscription)
+        public ValidationResult Validate(Subscription subscription)
         {
             if (subscription == null)
-                return (false, "Subscription is null");
+                return new ValidationResult(false, "Subscription is null");
 
             if (string.IsNullOrEmpty(subscription.CustomerEmail))
-                return (false, "Customer email is required");
+                return new ValidationResult(false, "Customer email is required");
 
             if (subscription.BasePrice <= 0)
-                return (false, "Base price must be greater than 0");
+                return new ValidationResult(false, "Base price must be greater than 0");
             
-            return (true, string.Empty);
+            return new ValidationResult(true, string.Empty);
         }
     }
 }
